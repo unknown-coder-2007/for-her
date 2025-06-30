@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loop Test</title>
+</head>
+<body>
+  <h1>Click anywhere to start music in loop</h1>
+
+  <audio id="bgMusic" src="audio.mp3" loop hidden></audio>
+
+  <script>
+    const bgMusic = document.getElementById('bgMusic');
+
+    window.addEventListener('click', () => {
+      bgMusic.play().then(() => {
+        console.log("Music is playing in loop.");
+      }).catch((e) => {
+        console.error("Autoplay error:", e);
+      });
+    }, { once: true });
+  </script>
+</body>
+</html>

@@ -65,7 +65,64 @@
 		</div>
 	</div>
 
+<audio id="bgMusic" src="audio.mp3" autoplay hidden loop></audio>
+<script>
+//    window.addEventListener('click', () => {
+//     const music = document.getElementById('bgMusic');
+//     music.play();
+//   }, { once: true });
 
+  const bgMusic = document.getElementById('bgMusic');
+  bgMusic.loop = false; // We'll handle loop manually to insert fade
+
+  const FADE_DURATION = 5;      // seconds
+  const AUDIO_DURATION = 24;    // seconds
+
+  // Fade In Function
+  function fadeIn(audio) {
+    audio.volume = 0;
+    let step = 0.05;
+    let interval = setInterval(() => {
+      if (audio.volume < 1) {
+        audio.volume = Math.min(audio.volume + step, 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, (FADE_DURATION * 1000 * step));
+  }
+
+  // Fade Out Function
+  function fadeOut(audio, callback) {
+    let step = 0.05;
+    let interval = setInterval(() => {
+      if (audio.volume > 0) {
+        audio.volume = Math.max(audio.volume - step, 0);
+      } else {
+        clearInterval(interval);
+        if (callback) callback();
+      }
+    }, (FADE_DURATION * 1000 * step));
+  }
+
+  function playWithFade() {
+    bgMusic.currentTime = 0;
+    bgMusic.play();
+    fadeIn(bgMusic);
+
+    // Schedule fadeOut before end
+    setTimeout(() => {
+      fadeOut(bgMusic, () => {
+        // Replay after fade out
+        playWithFade();
+      });
+    }, (AUDIO_DURATION - FADE_DURATION) * 1000);
+  }
+
+  window.addEventListener('click', () => {
+    playWithFade();
+  }, { once: true });
+</script>
 </body>
+
 
 </html>
